@@ -1,55 +1,57 @@
-// List all people. (200)
+// 1. List all people. (200)
 db.people.find();
 
-// Count all people. (200)
+// 2. Count all people. (200)
 db.people.find().count();
 
-// List all people in Arizona. (6)
+// 3. List all people in Arizona. (6)
 db.people.find( { state: 'Arizona' } );
 
-// List all males in Arizona. (2)
+// 4. List all males in Arizona. (2)
 db.people.find( { gender: 'Male', state: 'Arizona' } );
 
-// List all people in Arizona plus New Mexico. (8)
+// 5. List all people in Arizona plus New Mexico. (8)
 db.people.find( {
     $or: [ { state: 'Arizona' },
     { state: 'New Mexico' } ]
 } );
 
-// List all people under age 40. (90)
+// 6. List all people under age 40. (90)
 db.people.find( { age: { $lt: 40 } } );
 
-// List all females in Florida between the ages of 40 and 45 (inclusive). (4)
+// 7. List all females in Florida between the ages of 40 and 45 (inclusive). (4)
 db.people.find( { $and: [ { gender: 'Female' }, { age: { $gte: 40 } }, { age: { $lte: 45 } } ] } );
 
-// List people whose first name starts with "H". (2)
+// 8. List people whose first name starts with "H". (2)
 db.people.find( { first_name: /^H/i } );
 
-// List all people in Michigan, sorted by first name. (6)
+// 9. List all people in Michigan, sorted by first name. (6)
 db.people.find( { state: 'Michigan' } ).sort( { first_name: 1 } );
 
-// List all people who live in Virginia or are named Virginia.
+// 10. List all people who live in Virginia or are named Virginia.
 db.people.find( { $or: [ { state: 'Virginia' }, { name: 'Virginia' } ] } );
 
-// List the names of people under age 30. Only display their first and last name. (38)
+// 11. List the names of people under age 30. Only display their first and last name. (38)
 db.people.find( { age: { $lt: 30 } }, { first_name: 1 } );
 
-// List all people in Montana. Display all information except age. (2)
+// 12. List all people in Montana. Display all information except age. (2)
 db.people.find( { state: 'Montana' }, { age: 0 } );
 
-// List the email addresses of people with a ".edu" email. Only display the email. (12)
+// 13. List the email addresses of people with a ".edu" email. Only display the email. (12)
 db.people.find( { state: 'Montana' }, { age: 0 } );
 
-// Count all people with at least one child under age four. (69)
+// 14. Count all people with at least one child under age four. (69)
 db.people.find( { 'children.age': { $lt: 4 } } ).count();
 
-// List people who have no children. (43)
+// 15. List people who have no children. (43)
 db.people.find( { children: { $size: 0 } } );
 
-// List people who have at least one child. (157)
+// 16. List people who have at least one child. (157)
 db.people.find( { children: { $ne: [] } } );
 
-// Add a person to the collection. You pick the data, but they should have an empty array for children.
+
+// Part 2
+// 1. Add a person to the collection. You pick the data, but they should have an empty array for children.
 db.people.insertOne( {
     first_name: 'David',
     last_name: 'Rose',
@@ -61,7 +63,7 @@ db.people.insertOne( {
 } );
 
 
-// Add another person. They should have at least two children.
+// 2. Add another person. They should have at least two children.
 db.people.insertOne( {
     first_name: 'Moira',
     last_name: 'Rose',
@@ -73,17 +75,17 @@ db.people.insertOne( {
     { name: 'Alexis', age: 30 } ]
 } );
 
-// Update one person named Clarence. He moved from North Dakota to South Dakota.
+// 3. Update one person named Clarence. He moved from North Dakota to South Dakota.
 db.people.updateOne( { first_name: 'Clarence', state: 'North Dakota' }, { $set: { state: 'South Dakota' } } );
 
-// Update Rebecca Hayes. Remove her email address.
+// 4. Update Rebecca Hayes. Remove her email address.
 db.people.updateOne( { first_name: 'Rebecca', last_name: 'Hayes' }, { $set: { email: null } } );
 
-// Update everyone from Missouri. They all had a birthday today, so add one to their age. (expect 4 matches)
+// 5. Update everyone from Missouri. They all had a birthday today, so add one to their age. (expect 4 matches)
 db.people.updateMany( { state: 'Rebecca', state: 'Missouri' }, { $inc: { age: 1 } } );
 
 
-// Jerry Baker has updated information. Replace with a new document:
+// 6. Jerry Baker has updated information. Replace with a new document:
 // { first_name: "Jerry", last_name: "Baker-Mendez", email: "jerry@classic.ly", gender:"Male", age: 28, state: "Vermont", "children": [{name: "Alan", age: 18}, {name: "Jenny", age: 3}] }
 db.people.replaceOne( { first_name: 'Jerry' },
     {
@@ -94,13 +96,13 @@ db.people.replaceOne( { first_name: 'Jerry' },
         state: 'Vermont', 'children': [ { name: 'Alan', age: 18 }, { name: 'Jenny', age: 3 } ]
     } );;
 
-// Delete Wanda Bowman.
+// 7. Delete Wanda Bowman.
 db.people.deleteOne( { first_name: 'Wanda', last_name: 'Bowman' } );
 
-// Delete everyone who does not have an email address specified. (expect 37 matches)
+// 8. Delete everyone who does not have an email address specified. (expect 37 matches)
 db.people.deleteMany( { email: null } );
 
-// Add several documents to a new submissions collection. Do it all in one command. (Remember, MongoDB will create the collection for you. Just start adding documents.)
+// 9. Add several documents to a new submissions collection. Do it all in one command. (Remember, MongoDB will create the collection for you. Just start adding documents.)
 db.people.insertMany( [ {
     first_name: 'Alexis',
     last_name: 'Rose',
@@ -129,10 +131,23 @@ db.submissions.insertMany( [
     { title: "Non Sequitur", upvotes: 11, downvotes: 1, artist: db.people.find( { first_name: 'Gerald', last_name: 'Bailey' } )._id }
 ] );
 
-// Add 2 upvotes for "The River Bend".
+// 10. Add 2 upvotes for "The River Bend".
 db.submissions.updateOne( { title: 'The River Bend' },
     { $inc: { upvotes: 2 } } );
 
-// Add a field round2 = true to all submissions with at least 10 upvotes. (expect 3 matches)
+// 11. Add a field round2 = true to all submissions with at least 10 upvotes. (expect 3 matches)
 db.submissions.updateMany( { upvotes: { $gte: 10 } },
     { $set: { round2: true } } );
+
+// 12. Update Helen Clark. She had a baby! Add a child, name: Melanie, age: 0.
+db.people.updateOne( { first_name: 'Helen', last_name: 'Clark' }, { $set: { children: [ { name: 'Melanie', age: 0 } ] } } );
+
+// 13. Joan Bishop has a child named Catherine.She just had a birthday and prefers to go by "Cat".
+// In one query update the child's name to "Cat" and increment her age by one.;
+db.people.updateOne( { first_name: 'Joan', last_name: 'Bishop' },
+    { children: [ { name: 'Catherine' }, { $set: { name: 'Cat' }, { $inc: { age: 1 } } ] } );
+
+
+// 14. List all submissions that have more downvotes than upvotes.;
+db.people.updateOne( { first_name: 'Joan', last_name: 'Bishop' },
+    { children: [ { name: 'Catherine' }, { $set: { name: 'Cat' }, $inc: { age: 1 } } ] } );
