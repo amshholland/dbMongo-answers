@@ -144,10 +144,9 @@ db.people.updateOne( { first_name: 'Helen', last_name: 'Clark' }, { $set: { chil
 
 // 13. Joan Bishop has a child named Catherine.She just had a birthday and prefers to go by "Cat".
 // In one query update the child's name to "Cat" and increment her age by one.;
-db.people.updateOne( { first_name: 'Joan', last_name: 'Bishop' },
-    { children: [ { name: 'Catherine' }, { $set: { name: 'Cat' }, { $inc: { age: 1 } } ] } );
-
-
-// 14. List all submissions that have more downvotes than upvotes.;
-db.people.updateOne( { first_name: 'Joan', last_name: 'Bishop' },
-    { children: [ { name: 'Catherine' }, { $set: { name: 'Cat' }, $inc: { age: 1 } } ] } );
+db.people.updateOne( { first_name: "Joan", last_name: "Bishop" },
+    {
+        $set: { "children.$[elem].name": "Cat" },
+        $inc: { "children.$[elem].age": 1 }
+    },
+    { arrayFilters: [ { "elem.name": "Catherine" } ] } );
